@@ -1,4 +1,6 @@
 #!/bin/bash
+
+# shellcheck source-path=SCRIPTDIR/..
 . ./buildScripts/setEnv.sh
 
 echo "Getting service principal credentials..."
@@ -8,6 +10,7 @@ if [ ! -f "${ACRSPCREDENTIALS_SECUREFILEPATH}" ]; then
 fi
 
 chmod u+x "${ACRSPCREDENTIALS_SECUREFILEPATH}"
+# shellcheck source=/dev/null
 . "${ACRSPCREDENTIALS_SECUREFILEPATH}"
 
 if [ -z ${AZ_ACR_SP_ID+x} ]; then
@@ -23,7 +26,7 @@ buildah login -u "${AZ_ACR_SP_ID}" -p "${AZ_ACR_SP_SECRET}" "${MY_AZ_ACR_URL}"  
 
 echo "Building tag ${OUR_SERVICE_TAG_BASE}"
 buildah bud \
-  --build-arg __base_image=${AZ_BASE_IMAGE_TAG} \
+  --build-arg __base_image="${AZ_BASE_IMAGE_TAG}" \
   --format docker \
   -t "${OUR_SERVICE_TAG_BASE}" || exit 4
 
